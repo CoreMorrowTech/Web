@@ -1,8 +1,8 @@
-# 串口通讯Web管理平台
+# 串口通讯Web管理平台 (Next.js版)
 
 ## 项目介绍
 
-串口通讯Web管理平台是一个企业级的Web应用程序，允许不同电脑上的用户通过浏览器访问和管理各自本地的串口设备。系统采用前端React + 后端TypeScript的架构，支持多用户同时访问，每个用户只能查看和操作自己电脑上的串口设备。
+串口通讯Web管理平台是一个企业级的Web应用程序，允许用户通过浏览器访问和管理本地的串口设备。该项目已重构为使用Next.js的前后端一体化架构，便于使用Vercel部署和维护。
 
 ## 功能特性
 
@@ -10,88 +10,76 @@
 - 串口连接管理（连接、断开）
 - 串口通讯功能（发送和接收数据）
 - 支持文本和十六进制数据格式
-- 多用户隔离，确保安全性
 - 实时通讯和状态更新
 - 响应式设计，支持不同屏幕尺寸
 
 ## 技术栈
 
-### 前端
-- React 18
-- TypeScript
-- Vite
-- Tailwind CSS
-- Zustand（状态管理）
-
-### 后端
-- Node.js
-- TypeScript
-- ws（WebSocket库）
-- serialport（Node.js串口通讯库）
-- express（Web服务框架）
+- **框架**: Next.js 14 (React 18 + Node.js)
+- **UI**: Tailwind CSS
+- **状态管理**: Zustand
+- **WebSocket**: ws
+- **串口通讯**: serialport
+- **部署平台**: Vercel
 
 ## 快速开始
 
 ### 安装依赖
 
 ```bash
-# 安装前端依赖
-cd frontend
-npm install
-
-# 安装后端依赖
-cd ../backend
 npm install
 ```
 
 ### 启动开发服务器
 
 ```bash
-# 启动后端服务
-cd backend
-npm run dev
-
-# 启动前端服务（在另一个终端）
-cd frontend
 npm run dev
 ```
 
 ### 构建生产版本
 
 ```bash
-# 构建前端
-cd frontend
 npm run build
+```
 
-# 构建后端
-cd backend
-npm run build
+### 启动生产服务
+
+```bash
+npm start
 ```
 
 ## 项目结构
 
 ```
-serial-port-web-manager/
-├── frontend/            # React前端应用
-│   ├── src/             # 源代码
-│   │   ├── components/  # UI组件
-│   │   ├── hooks/       # React Hooks
-│   │   ├── services/    # 服务层
-│   │   ├── store/       # 状态管理
-│   │   └── types/       # TypeScript类型定义
-│   ├── public/          # 静态资源
-│   └── index.html       # HTML入口文件
-│
-├── backend/             # Node.js后端服务
-│   ├── src/             # 源代码
-│   │   ├── services/    # 服务层
-│   │   ├── websocket/   # WebSocket处理
-│   │   └── types/       # TypeScript类型定义
-│   └── dist/            # 编译输出目录
-│
-└── README.md            # 项目说明文档
+/
+├── app/                  # Next.js App Router
+│   ├── api/              # API路由
+│   │   ├── hello/        # Hello API
+│   │   └── ws/           # WebSocket API
+│   ├── globals.css       # 全局样式
+│   ├── layout.tsx        # 布局组件
+│   └── page.tsx          # 首页
+├── components/           # React组件
+├── services/             # 服务
+├── store/                # Zustand状态管理
+├── types/                # TypeScript类型定义
+├── next.config.js        # Next.js配置
+├── package.json          # 项目依赖
+├── tailwind.config.js    # Tailwind配置
+├── tsconfig.json         # TypeScript配置
+└── vercel.json           # Vercel部署配置
 ```
+
+## Vercel部署
+
+该项目已配置好用于Vercel部署。只需将代码推送到GitHub，然后在Vercel中导入该仓库即可完成部署。
+
+## 注意事项
+
+- 串口功能需要在本地环境中运行，因为Web浏览器无法直接访问硬件串口
+- 部署到Vercel后，WebSocket API会在Edge函数中运行，但实际串口操作需要在本地服务中进行
 
 ## 许可证
 
 [MIT](LICENSE)
+
