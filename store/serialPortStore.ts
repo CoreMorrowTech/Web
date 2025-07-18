@@ -3,6 +3,7 @@
 import { create } from 'zustand';
 import { useWebSocketStore } from './websocketStore';
 import { SerialPort, ConnectionOptions, ConnectionStatus, DataFormat } from '@/types/serialPort';
+import SerialPortClientService from '@/services/serialPortClientService';
 
 interface SerialPortState {
   // 状态
@@ -81,11 +82,29 @@ export const useSerialPortStore = create<SerialPortState>((set, get) => {
 
     // 获取可用串口列表
     fetchPorts: async () => {
-      const { sendMessage } = useWebSocketStore.getState();
-      sendMessage({
-        type: 'LIST_PORTS',
-        payload: {}
-      });
+      // 使用新的客户端服务
+      if (SerialPortClientService) {
+        try {
+          const ports = await SerialPortClientService.getSerialPorts();
+          set({ ports });
+        } catch (error) {
+          console.error('Failed to fetch ports:', error);
+          // 如果失败，回退到原始WebSocket方法
+          const { sendMessage } = useWebSocketStore.getState();
+          sendMessage?.({
+            type: 'LIST_PORTS',
+            payload: {}
+          });
+        }
+      } else {
+        // 回退到原始WebSocket方法
+        const { sendMessage } = useWebSocketStore.getState();
+        sendMessage?.({
+          type: 'LIST_PORTS',
+          payload: {}
+        });
+      }
+
       return Promise.resolve();
     },
 
@@ -97,7 +116,6 @@ export const useSerialPortStore = create<SerialPortState>((set, get) => {
     // 连接串口
     connectPort: async (options = {}) => {
       const { selectedPort, connectionOptions } = get();
-      const { sendMessage } = useWebSocketStore.getState();
 
       if (!selectedPort) {
         throw new Error('No port selected');
@@ -107,13 +125,32 @@ export const useSerialPortStore = create<SerialPortState>((set, get) => {
       const mergedOptions = { ...connectionOptions, ...options };
       set({ connectionStatus: 'connecting', connectionOptions: mergedOptions });
 
-      sendMessage({
-        type: 'CONNECT_PORT',
-        payload: {
-          path: selectedPort.path,
-          options: mergedOptions
+      if (SerialPortClientService) {
+        try {
+          await SerialPortClientService.connectPort(selectedPort.path, mergedOptions);
+        } catch (error) {
+          console.error('Connection failed:', error);
+          // 回退到原始方法
+          const { sendMessage } = useWebSocketStore.getState();
+          sendMessage?.({
+            type: 'CONNECT_PORT',
+            payload: {
+              path: selectedPort.path,
+              options: mergedOptions
+            }
+          });
         }
-      });
+      } else {
+        // 回退到原始方法
+        const { sendMessage } = useWebSocketStore.getState();
+        sendMessage?.({
+          type: 'CONNECT_PORT',
+          payload: {
+            path: selectedPort.path,
+            options: mergedOptions
+          }
+        });
+      }
 
       return Promise.resolve();
     },
@@ -121,18 +158,35 @@ export const useSerialPortStore = create<SerialPortState>((set, get) => {
     // 断开串口连接
     disconnectPort: async () => {
       const { selectedPort } = get();
-      const { sendMessage } = useWebSocketStore.getState();
 
       if (!selectedPort) {
         throw new Error('No port selected');
       }
 
-      sendMessage({
-        type: 'DISCONNECT_PORT',
-        payload: {
-          path: selectedPort.path
+      if (SerialPortClientService) {
+        try {
+          await SerialPortClientService.disconnectPort(selectedPort.path);
+        } catch (error) {
+          console.error('Disconnection failed:', error);
+          // 回退到原始方法
+          const { sendMessage } = useWebSocketStore.getState();
+          sendMessage?.({
+            type: 'DISCONNECT_PORT',
+            payload: {
+              path: selectedPort.path
+            }
+          });
         }
-      });
+      } else {
+        // 回退到原始方法
+        const { sendMessage } = useWebSocketStore.getState();
+        sendMessage?.({
+          type: 'DISCONNECT_PORT',
+          payload: {
+            path: selectedPort.path
+          }
+        });
+      }
 
       return Promise.resolve();
     },
@@ -140,20 +194,39 @@ export const useSerialPortStore = create<SerialPortState>((set, get) => {
     // 发送数据到串口
     sendData: async (data, format) => {
       const { selectedPort } = get();
-      const { sendMessage } = useWebSocketStore.getState();
 
       if (!selectedPort) {
         throw new Error('No port selected');
       }
 
-      sendMessage({
-        type: 'SEND_DATA',
-        payload: {
-          path: selectedPort.path,
-          data,
-          format
+      if (SerialPortClientService) {
+        try {
+          await SerialPortClientService.sendData(selectedPort.path, data, format);
+        } catch (error) {
+          console.error('Sending data failed:', error);
+          // 回退到原始方法
+          const { sendMessage } = useWebSocketStore.getState();
+          sendMessage?.({
+            type: 'SEND_DATA',
+            payload: {
+              path: selectedPort.path,
+              data,
+              format
+            }
+          });
         }
-      });
+      } else {
+        // 回退到原始方法
+        const { sendMessage } = useWebSocketStore.getState();
+        sendMessage?.({
+          type: 'SEND_DATA',
+          payload: {
+            path: selectedPort.path,
+            data,
+            format
+          }
+        });
+      }
 
       return Promise.resolve();
     },
