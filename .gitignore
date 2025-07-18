@@ -1,0 +1,61 @@
+# 依赖目录
+node_modules/
+.pnp/
+.pnp.js
+
+# 构建输出
+dist/
+build/
+out/
+.next/
+.nuxt/
+public/
+
+# 环境文件
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# 日志文件
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# 编辑器目录和文件
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
+.project
+.classpath
+.settings/
+*.sublime-*
+
+# 缓存和临时文件
+.cache/
+.temp/
+.tmp/
+.eslintcache
+.stylelintcache
+*.tsbuildinfo
+.npm
+.eslintcache
+.vercel
+.coverage
+coverage/
+.nyc_output
+
+# 操作系统文件
+Thumbs.db
+desktop.ini

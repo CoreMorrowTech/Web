@@ -1,0 +1,31 @@
+{
+  "name": "serial-port-web-manager-backend",
+  "version": "0.1.0",
+  "description": "串口通讯Web管理平台后端服务",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
+    "clean": "rimraf dist"
+  },
+  "keywords": [
+    "serialport",
+    "websocket",
+    "node"
+  ],
+  "dependencies": {
+    "express": "^4.18.2",
+    "serialport": "^11.0.0",
+    "ws": "^8.14.1"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.17",
+    "@types/node": "^20.5.6",
+    "@types/ws": "^8.5.5",
+    "rimraf": "^5.0.1",
+    "ts-node": "^10.9.1",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.2.2"
+  }
+}
