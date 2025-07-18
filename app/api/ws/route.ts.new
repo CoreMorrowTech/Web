@@ -1,0 +1,35 @@
+import { NextResponse } from 'next/server';
+
+// 模拟的串口设备数据
+const mockPorts = [
+  {
+    path: 'COM1',
+    manufacturer: '模拟设备',
+    serialNumber: 'SIM001',
+    vendorId: '0000',
+    productId: '0001'
+  },
+  {
+    path: 'COM2',
+    manufacturer: 'Arduino',
+    serialNumber: 'SIM002',
+    vendorId: '2341',
+    productId: '0043'
+  },
+  {
+    path: 'COM3',
+    manufacturer: '其他设备',
+    serialNumber: 'SIM003',
+    vendorId: '1A86',
+    productId: '7523'
+  }
+];
+
+// 说明SerialPort需要在本地环境运行
+export async function GET() {
+  return NextResponse.json({
+    message: 'WebSocket API - 串口操作需要在本地环境中运行',
+    info: '在Vercel部署时，需要本地运行一个串口服务器，然后在浏览器中连接到该服务器',
+    mockPorts
+  });
+}
